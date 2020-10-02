@@ -1,0 +1,56 @@
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mt-5">
+                <h4 class="text-center">Account List</h4>
+                <br>
+                <br>
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+
+                            <th style="text-align: center;" scope="col">Name</th>
+                            <th style="text-align: center;" scope="col">Account Number</th>
+                            <th style="text-align: center;" scope="col">Amount</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each accounts}}
+                        <tr>
+                            <td style="text-align: center;">{{this.Name}}</td>
+                            <td style="text-align: center;">{{this.Number}}</td>
+                            <td style="text-align: center;">{{this.Denomination}}</td>
+                            <td style="text-align: center;">
+                                <a href="/deleteFromList/{{this._id}}"class="btn btn-danger">Delete</a></td>
+                        </tr>
+                        {{/each}}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+</section>
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mt-5">
+                <div class="input-group">
+                    <div id="list" class="text-center">
+
+                        {{#each accounts}}
+                        {{this.Number}},
+                        {{/each}}
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button style=" background-color:#00BBF0;color:white" id="copyText" class="btn"
+                        data-clipboard-action="copy" data-clipboard-target="#list">Copy to Clipboard</button>
+                    <a href="/finish" style=" background-color:#45EBA5;color:white" class="btn">Finish</a>
+                </div>
+
+                <br>
+            </div>
+        </div>
+    </div>
+</section>
