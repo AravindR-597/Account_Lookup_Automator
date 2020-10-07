@@ -30,7 +30,7 @@ router.get("/add", function (_req, res) {
 
 //Add Account
 router.post("/addAccount", function (req, res) {
-  console.log(req.body);
+  //console.log(req.body);
 
   mainfunction.addAccount(req.body, () => {
     res.redirect("/");
@@ -52,8 +52,9 @@ router.post("/deleteAccount", function (req, res) {
 });
 //Get Final Page
 router.get("/final", function (_req, res) {
-  mainfunction.finalList().then((accounts) => {
-    res.render("final", { title: "Account Lookup", accounts: accounts });
+  mainfunction.finalList().then(([accounts,count]) => {
+    console.log(accounts)
+    res.render("final", { title: "Account Lookup", accounts: accounts , count});
   });
 });
 //Add To List
@@ -65,7 +66,7 @@ router.get("/addToList/:id", function (req, res) {
 });
 //Delete Account From List
 router.get("/deleteFromList/:id", function (req, res) {
-  console.log(req.params.id);
+ // console.log(req.params.id);
 
   mainfunction.deleteFromList(req.params.id, () => {
     res.redirect("/final");

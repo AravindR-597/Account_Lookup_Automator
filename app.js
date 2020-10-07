@@ -21,7 +21,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 db.connect((err)=>{
   if(err) console.log("Connection Error"+err)
-  console.log("Database Connected Succesfully")
+  console.log(" Connected to Database")
 })
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

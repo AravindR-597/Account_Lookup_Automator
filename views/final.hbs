@@ -1,9 +1,10 @@
 <section>
-    <div class="container">
+    <div  class="container">
         <div class="row">
             <div class="col-md-12 mt-5">
                 <h4 class="text-center">Account List</h4>
                 <br>
+                <h4 class="text-right text-success">Total Records : {{this.count}}</h4>
                 <br>
                 <table class="table">
                     <thead class="thead-dark">
@@ -12,6 +13,8 @@
                             <th style="text-align: center;" scope="col">Name</th>
                             <th style="text-align: center;" scope="col">Account Number</th>
                             <th style="text-align: center;" scope="col">Amount</th>
+                            <th></th>
+
                             <th></th>
                         </tr>
                     </thead>
@@ -22,7 +25,7 @@
                             <td style="text-align: center;">{{this.Number}}</td>
                             <td style="text-align: center;">{{this.Denomination}}</td>
                             <td style="text-align: center;">
-                                <a href="/deleteFromList/{{this._id}}"class="btn btn-danger">Delete</a></td>
+                            <a href="/deleteFromList/{{this._id}}"class="btn btn-danger">Delete</a></td>
                         </tr>
                         {{/each}}
 
@@ -32,15 +35,16 @@
         </div>
 </section>
 <section>
-    <div class="container">
+    <div  class="container">
         <div class="row">
             <div class="col-md-12 mt-5">
                 <div class="input-group">
                     <div id="list" class="text-center">
-
+                        <h5>
                         {{#each accounts}}
-                        {{this.Number}},
+                      {{this.Number}},  
                         {{/each}}
+                        </h5>
                     </div>
                 </div>
                 <div class="text-center">

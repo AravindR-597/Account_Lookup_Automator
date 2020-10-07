@@ -6,7 +6,7 @@ const collections = require("../config/collections");
 
 module.exports = {
   addAccount: (account, callback) => {
-    console.log(account);
+    //console.log(account);
 
     db.get()
       .collection(collection.ACCOUNT_LOOKUP)
@@ -17,7 +17,7 @@ module.exports = {
   },
 
   deleteAccount: (account, callback) => {
-    console.log(account);
+    //console.log(account);
 
     db.get()
       .collection(collection.ACCOUNT_LOOKUP)
@@ -43,24 +43,25 @@ module.exports = {
         .get()
         .collection(collection.ACCOUNT_LOOKUP)
         .find({ Name: name })
+        .sort({ Name: 1 })
         .toArray();
       resolve(accounts);
     });
   },
 
   addToList: (id, callback) => {
-    console.log(id);
+    //console.log(id);
 
     db.get()
       .collection(collection.ACCOUNT_LOOKUP)
       .findOne({ _id: ObjectId(id) })
-      .then((data, err) => {
-        console.log(data);
+      .then((data) => {
+        //console.log(data);
 
         db.get()
           .collection("list")
           .insertOne(data)
-          .then((data) => {
+          .then((newData) => {
             callback(true);
           });
       });
@@ -68,22 +69,28 @@ module.exports = {
   finalList: () => {
     return new Promise(async (resolve, reject) => {
       let accounts = await db.get().collection("list").find().toArray();
-
-      resolve(accounts);
+      let count = await db.get().collection("list").count();
+      resolve([accounts,count]);
+    });
+  },
+  numberOfRecords: () => {
+    return new Promise(async (resolve, reject) => {
+      let records = await db.get().collection("list").count();
+      resolve(records);
     });
   },
   deleteFromList: (id, callback) => {
-    console.log(id);
+    //console.log(id);
 
     db.get()
       .collection("list")
       .findOne({ _id: ObjectId(id) })
       .then((data) => {
-        console.log(data);
+        //console.log(data);
         db.get()
           .collection("list")
           .deleteOne(data)
-          .then((data) => {
+          .then((newData) => {
             callback(true);
           });
       });
