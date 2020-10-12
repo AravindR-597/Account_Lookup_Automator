@@ -1,8 +1,7 @@
 var db = require("../config/connection");
 var collection = require("../config/collections");
-const { ACCOUNT_LOOKUP } = require("../config/collections");
+var credentials = require("../config/credentials");
 const { ObjectId } = require("mongodb");
-const collections = require("../config/collections");
 const { spawn } = require("child_process");
 const path = require("path");
 const { resolve } = require("path");
@@ -67,31 +66,31 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       let accounts = await db
         .get()
-        .collection("list")
+        .collection(collection.LIST)
         .find()
         .sort({ Number: 1 })
         .toArray();
       console.log(accounts);
-      let count = await db.get().collection("list").count();
+      let count = await db.get().collection(collection.LIST).count();
       resolve([accounts, count]);
     });
   },
   numberOfRecords: () => {
     return new Promise(async (resolve, reject) => {
-      let records = await db.get().collection("list").count();
+      let records = await db.get().collection(collection.LIST).count();
       resolve(records);
     });
   },
   deleteFromList: (id, callback) => {
     db.get()
-      .collection("list")
+      .collection(collection.LIST)
       .findOne({ _id: ObjectId(id) })
       .then((data) => {
         //console.log(data);
         db.get()
-          .collection("list")
+          .collection(collection.LIST)
           .deleteOne(data)
-          .then((newData) => {
+          .then(() => {
             callback(true);
           });
       });
@@ -131,7 +130,7 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       let genaratedNumbers = await db
         .get()
-        .collection(collections.LIST)
+        .collection(collection.LIST)
         .find({}, { projection: { Number: 1, default: 1, _id: 0 } })
         .toArray();
       console.log(genaratedNumbers);
@@ -139,6 +138,8 @@ module.exports = {
       let rebateNumber = genaratedNumbers.map((a) => a.default);
       const childPyhton = spawn("python", [
         path.join(__dirname, "../public/pythonscripts/webscrape.py"),
+        credentials.USERNAME,
+        credentials.PASSWORD,
         result,
         rebateNumber,
       ]);

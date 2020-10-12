@@ -13,9 +13,9 @@ driver = webdriver.Chrome(PATH)
 driver.get("https://dopagent.indiapost.gov.in/")
 # print(driver.title)
 login = driver.find_element_by_id("AuthenticationFG.USER_PRINCIPAL")
-login.send_keys("DOP.MI6855840100003")
+login.send_keys(sys.argv[1])
 login = driver.find_element_by_id("AuthenticationFG.ACCESS_CODE")
-login.send_keys("#rd12345678rd#")
+login.send_keys(sys.argv[2])
 login = driver.find_element_by_id("VALIDATE_RM_PLUS_CREDENTIALS_CATCHA_DISABLED")
 login.click()
 try:
@@ -46,7 +46,7 @@ cash.click()
 
 fetchAccounts = driver.find_element_by_id("CustomAgentRDAccountFG.ACCOUNT_NUMBER_FOR_SEARCH")
 #print(sys[1])
-stringNumber = sys.argv[1]
+stringNumber = sys.argv[3]
 accNumbers=list(map(int,stringNumber.split(',')))
 print(accNumbers)
 noOfAccounts = len(accNumbers)
@@ -76,7 +76,7 @@ try:
 except:
     driver.quit()
 # print("here")
-rebateString = sys.argv[2]
+rebateString = sys.argv[4]
 rebate=list(map(int,rebateString.split(',')))
 
 print(len(rebate))
