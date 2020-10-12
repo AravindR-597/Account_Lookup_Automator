@@ -1,7 +1,9 @@
 var express = require("express");
 var router = express.Router();
 var JsAlert = require("js-alert");
+const { genarateList } = require("../account_fun/main_fun");
 var mainfunction = require("../account_fun/main_fun");
+const {spawn} = require('child_process');
 const { render } = require("../app");
 
 /* GET HOME page. */
@@ -53,7 +55,7 @@ router.post("/deleteAccount", function (req, res) {
 //Get Final Page
 router.get("/final", function (_req, res) {
   mainfunction.finalList().then(([accounts,count]) => {
-    console.log(accounts)
+    //console.log(accounts)
     res.render("final", { title: "Account Lookup", accounts: accounts , count});
   });
 });
@@ -72,10 +74,31 @@ router.get("/deleteFromList/:id", function (req, res) {
     res.redirect("/final");
   });
 });
+//plus
+router.get("/plusFunction/:id",(req,res)=>{
+  //console.log("api call")
+   mainfunction.plusFunction(req.params.id,1)
+    console.log("here")
+     res.redirect("/final")
+ })
+ //minus
+ router.get("/minusFunction/:id",(req,res)=>{
+  //console.log("api call")
+  mainfunction.plusFunction(req.params.id,0)
+  console.log("here")
+   res.redirect("/final")
+})
 //Finish
 router.get("/finish", (req, res) => {
   mainfunction.dropList();
   res.redirect("/");
+});
+
+//Genarate List
+router.get("/genarateList", (req, res) => {
+ let genaratedNumber=mainfunction.genarateList()
+    res.redirect("/final");
+
 });
 
 

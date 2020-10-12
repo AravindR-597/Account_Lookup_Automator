@@ -13,6 +13,10 @@
                             <th style="text-align: center;" scope="col">Name</th>
                             <th style="text-align: center;" scope="col">Account Number</th>
                             <th style="text-align: center;" scope="col">Amount</th>
+                            <th style="text-align: center;" scope="col"></th>
+                            <th style="text-align: center;" scope="col">R/A</th>
+                            <th style="text-align: center;" scope="col"></th>
+                            <th style="text-align: center;" scope="col">Remove from list</th>
                             <th></th>
 
                             <th></th>
@@ -24,6 +28,11 @@
                             <td style="text-align: center;">{{this.Name}}</td>
                             <td style="text-align: center;">{{this.Number}}</td>
                             <td style="text-align: center;">{{this.Denomination}}</td>
+                            <td colspan="1" class="text-right ">
+                                <a href="/plusFunction/{{this._id}}" class="btn btn-info mr-2">+</a></td>
+                            <td class="text-center align-center"id="repeat_account">{{this.default}}</td>
+                           <td colspan="1"class="text-left ">
+                               <a href="/minusFunction/{{this._id}}"class="btn btn-info ml-2">-</a></td>
                             <td style="text-align: center;">
                             <a href="/deleteFromList/{{this._id}}"class="btn btn-danger">Delete</a></td>
                         </tr>
@@ -40,7 +49,7 @@
             <div class="col-md-12 mt-5">
                 <div class="input-group">
                     <div id="list" class="text-center">
-                        <h5>
+                        <h5 onchange="genList(event)">
                         {{#each accounts}}
                       {{this.Number}},  
                         {{/each}}
@@ -48,9 +57,12 @@
                     </div>
                 </div>
                 <div class="text-center">
-                    <button style=" background-color:#00BBF0;color:white" id="copyText" class="btn"
+                    <button style=" background-color:#00BBF0;color:white" id="copyText" onclick="genList('list')" class="btn"
                         data-clipboard-action="copy" data-clipboard-target="#list">Copy to Clipboard</button>
-                    <a href="/finish" style=" background-color:#45EBA5;color:white" class="btn">Finish</a>
+
+                        {{!-- <button style=" background-color:#00BBF0;color:white" class="btn "  onclick="//genList('list')">Copy to Clipboard</button> --}}
+                     <a href="/genarateList"class="btn btn-success">Genarate List</a>
+                    <a href="/finish" style=" background-color:#45EBA5;color:white" class="btn ">Finish</a>
                 </div>
 
                 <br>
@@ -58,3 +70,13 @@
         </div>
     </div>
 </section>
+
+<script>
+    function genList(id){
+    console.log(id)
+    accountNumbers=[]
+    var number = document.getElementById(id); 
+    accountNumbers.push(number)
+    console.log(accountNumbers)
+    }
+</script>
