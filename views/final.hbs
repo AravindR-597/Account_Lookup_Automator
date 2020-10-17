@@ -6,7 +6,7 @@
                 <br>
                 <h4 class="text-right text-success">Total Records : {{this.count}}</h4>
                 <br>
-                <table class="table">
+                <table class="table animated flipInX">
                     <thead class="thead-dark">
                         <tr>
 
@@ -29,10 +29,10 @@
                             <td style="text-align: center;">{{this.Number}}</td>
                             <td style="text-align: center;">{{this.Denomination}}</td>
                             <td colspan="1" class="text-right ">
-                                <a href="/plusFunction/{{this._id}}" class="btn btn-info mr-2">+</a></td>
+                                <a href="/plusFunction/{{this._id}}"  class="btn btn-info mr-2">+</a></td>
                             <td class="text-center align-center"id="repeat_account">{{this.default}}</td>
                            <td colspan="1"class="text-left ">
-                               <a href="/minusFunction/{{this._id}}"class="btn btn-info ml-2">-</a></td>
+                               <a href="/minusfunction/{{this._id}}" class="btn btn-info ml-2">-</a></td>
                             <td style="text-align: center;">
                             <a href="/deleteFromList/{{this._id}}"class="btn btn-danger">Delete</a></td>
                         </tr>

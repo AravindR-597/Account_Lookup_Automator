@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <form action="/addAccount" method="post" role="form" enctype="application/x-www-form-urlencoded">
-               <br>
+                <br>
                 <legend>Add Account Details</legend>
 
                 <div class="form-group">
@@ -20,7 +20,9 @@
                     <input type="number" class="form-control" name="Denomination" id="Denomination"
                         placeholder="Amount">
                 </div>
-
+                <div class="form-group">
+                    <input type="hidden" class="form-control" name="default" id="default" value="1">
+                </div>
                 <button type="submit" class="btn btn-primary">Add Account</button>
                 <a href="/" class="btn btn-primary">Cancel</a>
             </form>

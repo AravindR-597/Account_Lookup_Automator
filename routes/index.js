@@ -78,14 +78,14 @@ router.get("/deleteFromList/:id", function (req, res) {
 router.get("/plusFunction/:id",(req,res)=>{
   //console.log("api call")
    mainfunction.plusFunction(req.params.id,1)
-    console.log("here")
-     res.redirect("/final")
+    //console.log("here")
+    res.redirect("/final")
  })
  //minus
  router.get("/minusFunction/:id",(req,res)=>{
-  //console.log("api call")
+ // console.log("api call")
   mainfunction.plusFunction(req.params.id,0)
-  console.log("here")
+  //console.log("here")
    res.redirect("/final")
 })
 //Finish
