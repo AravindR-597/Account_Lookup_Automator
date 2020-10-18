@@ -1,6 +1,5 @@
 var express = require("express");
 var router = express.Router();
-var JsAlert = require("js-alert");
 const { genarateList } = require("../account_fun/main_fun");
 var mainfunction = require("../account_fun/main_fun");
 const {spawn} = require('child_process');
@@ -15,9 +14,10 @@ router.get("/", (req, res, _next) => {
       res.render("index", { accounts: accounts });
     });
   } else {
-    mainfunction.findAccount().then((accounts) => {
+    let accounts = mainfunction.findAccount().then((accounts)=>{
       res.render("index", { accounts: accounts });
-    });
+    
+    })
   }
 });
 //function for search
@@ -61,9 +61,9 @@ router.get("/final", function (_req, res) {
 });
 //Add To List
 router.get("/addToList/:id", function (req, res) {
-  //console.log(req.params.id);
+  console.log("api call");
   mainfunction.addToList(req.params.id, () => {
-    res.redirect("/");
+    res.json({status:true})
   });
 });
 //Delete Account From List
@@ -71,7 +71,7 @@ router.get("/deleteFromList/:id", function (req, res) {
  // console.log(req.params.id);
 
   mainfunction.deleteFromList(req.params.id, () => {
-    res.redirect("/final");
+    res.redirect('/final')
   });
 });
 //plus

@@ -3,9 +3,6 @@
 
 <head>
 
-   {{!-- Ajax Jquery Library --}}
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-      <script src="javascripts/script.js"></script>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -13,6 +10,10 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
     integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+  {{!-- Alertify  --}}
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
 
   <title>DOP Agent Automator</title>
   <style>
@@ -52,7 +53,7 @@
         <div class="navbar-nav ml-auto">
           <a class="btn btn-success mr-2" href="/add">Add Account </a>
           <a class="btn btn-secondary mr-2" href="Delete">Delete Account </a>
-          <a class="btn btn-primary" href="/final">Final List</a>
+          <a class="btn btn-primary" href="/final" >Final List <span id="count" class="badge badge-light">{{count}}</span> </a>
 
         </div>
       </div>
@@ -69,7 +70,11 @@
     <div style="color:white" class="footer-copyright text-center py-3">© 2020 CopyrightDcodeMatrix</div>
 
   </footer>
- 
+  
+  
+   {{!-- Ajax Jquery Library --}}
+    <script src="/javascripts/script.js"></script>
+
   {{!-- Clipboard --}}
   <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
   <script>
@@ -87,6 +92,12 @@
     integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
     crossorigin="anonymous"></script>
 
+    {{!-- alertifyjs --}}
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
+     {{!-- Ajax Jquery Library --}} 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/javascripts/script.js"></script>
 </body>
 
 </html>

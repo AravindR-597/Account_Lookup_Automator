@@ -24,7 +24,26 @@ function addToList(id){
         url:'/addToList/'+id,
         method:'get',
         success:(response)=>{
-            alert(response)
+            if(response.status){
+                alertify.success('Added Successfully');
+            }
+        }
+    })
+}
+function deleteFromList(id){
+    $.ajax({
+        url:'/deleteFromList/'+id,
+        method:'get',
+        success:(response)=>{
+            if(response.status){
+                alertify.confirm("Do you want to delete this account from the list.",
+                function(){
+                  alertify.success('Ok');
+                },
+                function(){
+                  alertify.error('Cancel');
+                });
+            }
         }
     })
 }

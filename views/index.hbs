@@ -29,7 +29,7 @@
             <h3 style="color:red;" class="card-subtitle mb-2">{{this.Number}}</h3>
             <p class="card-text">{{this.Denomination}}</p>
 
-            <a href="/addToList/{{this._id}}" class="btn btn-primary " role="button">Add To list</a>
+            <button onclick="addToList('{{this._id}}')" class="btn btn-primary" id="addToList" role="button">Add To list</button>
 
           </div>
         </div>
@@ -38,3 +38,7 @@
     </div>
   </div>
 </section>
+
+<script>
+
+</script>
