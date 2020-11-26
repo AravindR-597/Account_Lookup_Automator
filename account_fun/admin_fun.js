@@ -66,7 +66,7 @@ module.exports = {
         password: await bcrypt.hash(newUser.Password, 10),
         UserInfo: {
             Firstname: newUser.FirstName,
-            Lastname: newUser.LastN ame,
+            Lastname: newUser.LastName,
             Mobile: newUser.Mobile,
             Email: newUser.Email,
             DOP_ID: newUser.accUsername,
