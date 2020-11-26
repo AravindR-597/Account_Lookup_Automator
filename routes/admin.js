@@ -21,9 +21,7 @@ router.get("/login", (req, res, next) => {
 
 });
 router.post("/login", async (req, res) => {
-  console.log(req.body);
   await adminfunction.loginFunction(req.body).then((data) => {
-    console.log(data.loginStatus);
     if (data.loginStatus) {
       req.session.adminLogin = true;
       req.session.admin = data.admin;
@@ -73,7 +71,6 @@ router.post("/addNewUser", (req, res) => {
 });
 router.get("/viewAllUsers", verifyLogin,(req, res) => {
   adminfunction.getUser().then((users) => {
-    console.log(users);
     res.render("viewAllUser", { users: users ,admin:true,logstate:true});
   });
 });

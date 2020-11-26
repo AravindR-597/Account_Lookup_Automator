@@ -35,7 +35,6 @@ module.exports = {
       user: ObjectId(userID),
       accounts: [data],
     };
-    console.log(newAccount);
     return new Promise(async (resolve, reject) => {
       await db
         .get()
@@ -56,7 +55,6 @@ module.exports = {
   },
 
   findAccount: (userId, search) => {
-    console.log(userId);
     return new Promise(async (resolve, reject) => {
       let accountArr = await db
         .get()
@@ -88,7 +86,6 @@ module.exports = {
     });
   },
   addToList: (Details, userId) => {
-    console.log(userId);
     let accDetails = {
       Name: Details.Name,
       Number: Details.Number,
@@ -271,15 +268,12 @@ module.exports = {
         rebateNumber,
       ]);
       if (childPython.status != 0) {
-        console.log(childPython.stderr);
       } else {
-        console.log(`${childPython.stdout}`);
         resolve(`${childPython.stdout}`);
       }
     });
   },
   changeAccountPassword: (passwords, userId) => {
-    console.log(passwords);
     return new Promise(async (resolve, reject) => {
       // oldpassword = await bcrypt.hash(passwords.Cpass, 10);
       oldpassword = passwords.Cpass;
@@ -288,12 +282,9 @@ module.exports = {
         .get()
         .collection(collection.USER)
         .findOne({ _id: ObjectId(userId) });
-      console.log(user.password);
-      console.log(oldpassword);
       if (user) {
         bcrypt.compare(oldpassword, user.password).then(async (status) => {
           if (status) {
-            console.log("true");
             await db
               .get()
               .collection(collection.USER)
@@ -303,7 +294,6 @@ module.exports = {
               );
             resolve({ changeStatus: true });
           } else {
-            console.log("false");
             resolve({ changeStatus: false });
           }
         });
@@ -311,7 +301,6 @@ module.exports = {
     });
   },
   changeDOPPassword: (passwords, userId) => {
-    console.log(passwords);
     return new Promise(async (resolve, reject) => {
       // oldpassword = await bcrypt.hash(passwords.Cpass, 10);
       oldpassword = passwords.Cpass;
@@ -320,15 +309,11 @@ module.exports = {
         .get()
         .collection(collection.USER)
         .findOne({ _id: ObjectId(userId) });
-      console.log(user.UserInfo.DOP_password);
-      console.log(oldpassword);
-      console.log(user.UserInfo.DOP_password);
       if (user) {
         bcrypt
           .compare(oldpassword, user.UserInfo.DOP_password)
           .then(async (status) => {
             if (status) {
-              console.log("true");
               await db
                 .get()
                 .collection(collection.USER)
@@ -342,7 +327,6 @@ module.exports = {
                 );
               resolve({ changeStatus: true });
             } else {
-              console.log("false");
               resolve({ changeStatus: false });
             }
           });

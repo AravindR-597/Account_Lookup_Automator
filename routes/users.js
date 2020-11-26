@@ -19,7 +19,6 @@ router.get("/login", (req, res) => {
 });
 //Login Submit
 router.post("/login", async (req, res) => {
-  console.log(req.body);
   await mainfunction.loginFunction(req.body).then((data) => {
     if (data.loginStatus) {
       req.session.userLogin = true;
@@ -122,7 +121,6 @@ router.get("/final", verifyLogin, async (req, res) => {
   let accounts = await mainfunction.finalList(user._id);
   if (accounts.length > 0) {
     total = await mainfunction.getTotal(user._id);
-    console.log(total);
   }
   res.render("final", {
     title: "Account Lookup",
@@ -141,21 +139,18 @@ router.post("/addToList/", verifyLogin, (req, res) => {
 });
 //Rebate
 router.post("/rebateFunction", async (req, res) => {
-  console.log(req.body);
   let response = {};
   let user = req.session.user;
   response.rebate = await mainfunction.rebateFunction(req.body, user._id);
   if (response.rebate.successStatus) {
     response.total = await mainfunction.getTotal(user._id);
   }
-  console.log(response);
   res.json(response);
 });
 //Delete From List
 router.post("/deleteFromList", verifyLogin, function (req, res) {
   let user = req.session.user;
   mainfunction.deleteFromList(req.body, user._id).then((response) => {
-    console.log(response.deleteStatus);
     res.json(response);
   });
 });
@@ -170,7 +165,6 @@ router.get("/finish", verifyLogin, async (req, res) => {
 router.get("/genarateList", verifyLogin, async (req, res) => {
   let user = req.session.user;
   await mainfunction.genarateList(user._id).then((data) => {
-    console.log("this is from userjs", data);
     res.json(data);
   });
 });

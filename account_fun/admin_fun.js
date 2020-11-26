@@ -59,14 +59,13 @@ module.exports = {
     });
   },
   addNewUser: (newUser, accounts) => {
-    console.log(newUser)
     return new Promise(async (resolve, reject) => {
       let user = {
         username: newUser.Mobile,
         password: await bcrypt.hash(newUser.Password, 10),
         UserInfo: {
             Firstname: newUser.FirstName,
-            Lastname: newUser.LastN ame,
+            Lastname: newUser.LastName,
             Mobile: newUser.Mobile,
             Email: newUser.Email,
             DOP_ID: newUser.accUsername,

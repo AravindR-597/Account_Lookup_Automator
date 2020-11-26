@@ -69,9 +69,7 @@ function genarateList() {
     url: "/genarateList",
     method: "get",
     success: (data) => {
-      console.log("test");
       if (data) {
-        console.log(data);
         alertify.alert(`List Number is : ${data}`, function () {
           location.replace("/finish");
         });
@@ -83,7 +81,6 @@ function showPassword(oldPass, newPass, cNewPass) {
   let oldPassword = document.getElementById(oldPass);
   let newPassword = document.getElementById(newPass);
   let confirmPassword = document.getElementById(cNewPass);
-  // console.log()
   if (
     oldPassword.type === "password" &&
     newPassword.type === "password" &&
