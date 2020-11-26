@@ -9,7 +9,7 @@ module.exports.connect=function(done){
     const dbname='accounts'
 
 
-    MongoClient.connect(url,(err,data)=>{
+    MongoClient.connect(url, {useUnifiedTopology: true},(err,data)=>{
         if(err) return done(err)
         state.db=data.db(dbname)
         done()

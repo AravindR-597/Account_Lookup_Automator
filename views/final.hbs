@@ -1,10 +1,14 @@
 <section>
-    <div  class="container">
+    <div class="container">
         <div class="row">
             <div class="col-md-12 mt-5">
-                <h4 class="text-center">Account List</h4>
+                <h4 class="text-center" style="font-weight:normal">Account List</h4>
                 <br>
-                <h4 class="text-right text-success">Total Records : {{this.count}}</h4>
+                <div class="total">
+                    <h4 class="text-right text-success" style="font-weight:normal">Total Amount : ₹ <span
+                            id="total">{{this.totalAmount}}</span></h4>
+                    <h4 class="text-right text-success" style="font-weight:normal">Total Records : {{this.count}}</h4>
+                </div>
                 <br>
                 <table class="table animated flipInX">
                     <thead class="thead-dark">
@@ -26,15 +30,19 @@
                         {{#each accounts}}
                         <tr>
                             <td style="text-align: center;">{{this.Name}}</td>
-                            <td style="text-align: center;">{{this.Number}}</td>
+                            <td style="text-align: center;" class="{{this.Number}}">{{this.Number}}</td>
                             <td style="text-align: center;">{{this.Denomination}}</td>
                             <td colspan="1" class="text-right ">
-                                <a href="/plusFunction/{{this._id}}"  class="btn btn-info mr-2">+</a></td>
-                            <td class="text-center align-center"id="repeat_account">{{this.default}}</td>
-                           <td colspan="1"class="text-left ">
-                               <a href="/minusfunction/{{this._id}}" class="btn btn-info ml-2">-</a></td>
+                                <button onclick="rebateFunction('{{this.Number}}',1)" id="plusbtn"
+                                    class="btn btn-info mr-2">+</button></td>
+                            <td class="text-center align-center {{this.Number}}" id="{{this.Number}}">{{this.Rebate}}
+                            </td>
+                            <td colspan="1" class="text-left ">
+                                <button onclick="rebateFunction('{{this.Number}}',-1)" id="minusbtn"
+                                    class="btn btn-info ml-2">-</button></td>
                             <td style="text-align: center;">
-                            <a href="/deleteFromList/{{this._id}}"class="btn btn-danger">Delete</a></td>
+                                <button onclick="deleteFromList('{{this.Number}}')"
+                                    class="btn btn-danger">Delete</button></td>
                         </tr>
                         {{/each}}
 
@@ -44,24 +52,23 @@
         </div>
 </section>
 <section>
-    <div  class="container">
+    <div class="container">
         <div class="row">
             <div class="col-md-12 mt-5">
                 <div class="input-group">
                     <div id="list" class="text-center">
                         <h5 onchange="genList(event)">
-                        {{#each accounts}}
-                      {{this.Number}},  
-                        {{/each}}
+                            {{#each accounts}}
+                            {{this.Number}},
+                            {{/each}}
                         </h5>
                     </div>
                 </div>
                 <div class="text-center">
-                    <button style=" background-color:#00BBF0;color:white" id="copyText" onclick="genList('list')" class="btn"
-                        data-clipboard-action="copy" data-clipboard-target="#list">Copy to Clipboard</button>
-
-                        {{!-- <button style=" background-color:#00BBF0;color:white" class="btn "  onclick="//genList('list')">Copy to Clipboard</button> --}}
-                     <a href="/genarateList"class="btn btn-success">Genarate List</a>
+                    <button style=" background-color:#00BBF0;color:white" id="copyText" onclick="genList('list')"
+                        class="btn" data-clipboard-action="copy" data-clipboard-target="#list">Copy to
+                        Clipboard</button>
+                    <button onclick="genarateList()" class="btn btn-success" id="genarateBtn">Generate List</button>
                     <a href="/finish" style=" background-color:#45EBA5;color:white" class="btn ">Finish</a>
                 </div>
 
@@ -72,11 +79,24 @@
 </section>
 
 <script>
-    function genList(id){
-    console.log(id)
-    accountNumbers=[]
-    var number = document.getElementById(id); 
-    accountNumbers.push(number)
-    console.log(accountNumbers)
+    function genList(id) {
+        console.log(id)
+        accountNumbers = []
+        var number = document.getElementById(id);
+        accountNumbers.push(number)
+        console.log(accountNumbers)
     }
 </script>
+<style>
+    .total {
+        display: flex;
+        justify-content: space-between;
+    }
+    #list{
+        background-color: white;
+        box-shadow: 
+        inset -10px 11px 8px -10px #CCC,
+        inset 10px -11px 8px -10px #CCC;
+        color: black;
+        }
+</style>

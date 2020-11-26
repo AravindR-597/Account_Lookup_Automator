@@ -1,6 +1,8 @@
 module.exports={
 
     ACCOUNT_LOOKUP:'rd',
-    LIST:'list'
+    LIST:'list',
+    USER :'users',
+    ADMIN : 'admin'
 
 }

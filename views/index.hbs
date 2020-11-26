@@ -2,11 +2,11 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12 mt-5">
-        <h4 class="text-center">Search Account</h4>
-        <form class="justify-content-center" action="/" method="GET">
+        <h4 class="text-center" style="font-weight: normal;">Search Account</h4>
+        <form class="justify-content-center"id="searchForm" action="/" method="GET">
           <div class="active-cyan-3 active-cyan-4 mb-4">
-            <input style="border-color:#45EBA5" class="form-control" name="search" type="text"
-              placeholder="Enter The Name" aria-label="Search">
+            <input style=" border-color:lightgrey" class="form-control" id="search" name="search" type="text"
+              placeholder="Enter The Name" onkeyup="searchFunction()" value="" aria-label="Search" autofocus>
           </div>
           <div class="text-center">
             <button type="submit" style="color:white;" class="btn btn-success  ">Search</button>
@@ -23,13 +23,13 @@
     <div class="row">
       {{#each accounts}}
       <div class="col-md-3 p-3">
-        <div class="card" style="width: 17rem;height:15rem;border-color:#45EBA5">
+        <div class="card" style="width: 17rem;height:13rem;border-color:#45EBA5">
           <div class="card-body">
             <h5 class="card-title">{{this.Name}}</h5>
             <h3 style="color:red;" class="card-subtitle mb-2">{{this.Number}}</h3>
-            <p class="card-text">{{this.Denomination}}</p>
+            <p class="card-text"> ₹ {{this.Denomination}}</p>
 
-            <button onclick="addToList('{{this._id}}')" class="btn btn-primary" id="addToList" role="button">Add To list</button>
+            <button onclick="addToList('{{this.Number}}','{{this.Name}}','{{this.Denomination}}','{{this.default}}')" class="btn btn-primary" id="addToList" role="button">Add To list</button>
 
           </div>
         </div>
@@ -39,6 +39,9 @@
   </div>
 </section>
 
-<script>
+<style>
+.card-body > h5,h3{
+font-weight: normal;
+  }
 
-</script>
+</style>

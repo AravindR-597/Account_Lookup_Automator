@@ -1,156 +1,352 @@
 var db = require("../config/connection");
 var collection = require("../config/collections");
-var credentials = require("../config/credentials");
 const { ObjectId } = require("mongodb");
-const { spawn } = require("child_process");
+const { spawnSync } = require("child_process");
 const path = require("path");
-const { resolve } = require("path");
+const bcrypt = require("bcrypt");
+const Cryptr = require("cryptr");
+const cryptr = new Cryptr("SECRETKEY");
 
 module.exports = {
-  addAccount: (account, callback) => {
-    //console.log(account);
-
-    db.get()
-      .collection(collection.ACCOUNT_LOOKUP)
-      .insertOne(account)
-      .then((data) => {
-        callback(true);
-      });
-  },
-
-  deleteAccount: (account, callback) => {
-    db.get()
-      .collection(collection.ACCOUNT_LOOKUP)
-      .deleteOne(account)
-      .then((data) => {
-        callback(true);
-      });
-  },
-
-  findAccount: () => {
+  loginFunction: (loginData) => {
+    let response = {};
     return new Promise(async (resolve, reject) => {
-      let accounts = await db
+      let user = await db
         .get()
-        .collection(collection.ACCOUNT_LOOKUP)
-        .find()
-        .toArray();
-      resolve(accounts);
+        .collection(collection.USER)
+        .findOne({ username: loginData.UserID });
+      if (user) {
+        bcrypt.compare(loginData.Password, user.password).then((status) => {
+          if (status) {
+            response.user = user;
+            response.loginStatus = true;
+            resolve(response);
+          } else {
+            resolve({ loginStatus: false });
+          }
+        });
+      } else {
+        resolve({ loginStatus: false });
+      }
     });
   },
-  searchAccount: (name) => {
+  addAccount: (data, userID) => {
+    let newAccount = {
+      user: ObjectId(userID),
+      accounts: [data],
+    };
+    console.log(newAccount);
     return new Promise(async (resolve, reject) => {
-      let accounts = await db
+      await db
         .get()
-        .collection(collection.ACCOUNT_LOOKUP)
-        .find({ Name: name })
-        .sort({ Name: 1 })
-        .toArray();
-      resolve(accounts);
+        .collection(collection.USER)
+        .updateOne({ _id: ObjectId(userID) }, { $push: { accounts: data } });
+      resolve();
     });
   },
 
-  addToList: (id, callback) => {
-    db.get()
-      .collection(collection.ACCOUNT_LOOKUP)
-      .findOne({ _id: ObjectId(id) })
-      .then((data) => {
-        db.get()
-          .collection("list")
-          .insertOne(data)
-          .then((newData) => {
-            callback(true);
-          });
-      });
-  },
-  finalList: () => {
+  deleteAccount: (data, userID) => {
     return new Promise(async (resolve, reject) => {
-      let accounts = await db
+      await db
+        .get()
+        .collection(collection.USER)
+        .updateOne({ _id: ObjectId(userID) }, { $pull: { accounts: data } });
+      resolve();
+    });
+  },
+
+  findAccount: (userId, search) => {
+    console.log(userId);
+    return new Promise(async (resolve, reject) => {
+      let accountArr = await db
+        .get()
+        .collection(collection.USER)
+        .aggregate([
+          {
+            $match: { _id: ObjectId(userId) },
+          },
+          {
+            $project: {
+              _id: 0,
+              accounts: 1,
+            },
+          },
+          {
+            $unwind: "$accounts",
+          },
+        ])
+        .toArray();
+      let account = accountArr.map((a) => a.accounts);
+      if (search) {
+        let matchedAccount = account.filter((a) => {
+          return search.test(a.Name);
+        });
+        resolve(matchedAccount);
+      } else {
+        resolve(account);
+      }
+    });
+  },
+  addToList: (Details, userId) => {
+    console.log(userId);
+    let accDetails = {
+      Name: Details.Name,
+      Number: Details.Number,
+      Denomination: parseInt(Details.Denomination),
+      Rebate: parseInt(Details.Rebate),
+    };
+    return new Promise(async (resolve, reject) => {
+      let userDB = await db
         .get()
         .collection(collection.LIST)
-        .find()
-        .sort({ Number: 1 })
-        .toArray();
-      console.log(accounts);
-      let count = await db.get().collection(collection.LIST).count();
-      resolve([accounts, count]);
-    });
-  },
-  numberOfRecords: () => {
-    return new Promise(async (resolve, reject) => {
-      let records = await db.get().collection(collection.LIST).count();
-      resolve(records);
-    });
-  },
-  deleteFromList: (id, callback) => {
-    db.get()
-      .collection(collection.LIST)
-      .findOne({ _id: ObjectId(id) })
-      .then((data) => {
-        //console.log(data);
+        .findOne({ user: ObjectId(userId) });
+      if (userDB) {
+        let dbExist = userDB.listAcc.findIndex(
+          (acc) => acc.Number == accDetails.Number
+        );
+        if (dbExist == -1) {
+          db.get()
+            .collection(collection.LIST)
+            .updateOne(
+              {
+                user: ObjectId(userId),
+              },
+              {
+                $push: { listAcc: accDetails },
+              }
+            )
+            .then(() => {
+              resolve({ status: true });
+            });
+        } else {
+          resolve({ status: false });
+        }
+      } else {
+        let listObj = {
+          user: ObjectId(userId),
+          listAcc: [accDetails],
+        };
         db.get()
           .collection(collection.LIST)
-          .deleteOne(data)
+          .insertOne(listObj)
           .then(() => {
-            callback(true);
+            resolve({ status: true });
           });
-      });
+      }
+    });
   },
-  plusFunction: (id, trigger) => {
+  finalList: (userID) => {
     return new Promise(async (resolve, reject) => {
-      let rebate = await db
+      let list = await db
         .get()
         .collection(collection.LIST)
-        .find({ _id: ObjectId(id) }, { projection: { default: 1, _id: 0 } })
+        .aggregate([
+          {
+            $match: { user: ObjectId(userID) },
+          },
+          {
+            $project: {
+              _id: 0,
+              listAcc: 1,
+            },
+          },
+          {
+            $unwind: "$listAcc",
+          },
+        ])
         .toArray();
-      let result = rebate.map((a) => a.default);
-      let numRebate = parseInt(result);
-      if (trigger == 1) var updatedRebate = (numRebate += 1);
-      if (trigger == 0) updatedRebate = numRebate -= 1;
-      updatedRebate = updatedRebate.toString();
-      id1 = id.toString();
+      let account = list.map((a) => a.listAcc);
+      resolve(account);
+    });
+  },
+  getTotal: (userID) => {
+    return new Promise(async (resolve, reject) => {
+      let total = await db
+        .get()
+        .collection(collection.LIST)
+        .aggregate([
+          {
+            $match: { user: ObjectId(userID) },
+          },
+          {
+            $project: {
+              _id: 0,
+              listAcc: 1,
+            },
+          },
+          {
+            $unwind: "$listAcc",
+          },
+          {
+            $group: {
+              _id: null,
+              total: {
+                $sum: {
+                  $multiply: ["$listAcc.Rebate", "$listAcc.Denomination"],
+                },
+              },
+            },
+          },
+        ])
+        .toArray();
+      resolve(total[0].total);
+    });
+  },
+  rebateFunction: (data, userID) => {
+    let currentValue = parseInt(data.currentValue);
+    let triggerValue = parseInt(data.trigger);
+    return new Promise(async (resolve, reject) => {
+      if (currentValue == 1 && triggerValue == -1) {
+        resolve({ successStatus: false, falseAttempt: true });
+      } else {
+        await db
+          .get()
+          .collection(collection.LIST)
+          .updateOne(
+            { user: ObjectId(userID), "listAcc.Number": { $eq: data.number } },
+            { $inc: { "listAcc.$.Rebate": triggerValue } }
+          );
+        resolve({ successStatus: true, falseAttempt: false });
+      }
+    });
+  },
+  deleteFromList: (data, userID) => {
+    return new Promise(async (resolve, reject) => {
       await db
         .get()
         .collection(collection.LIST)
         .updateOne(
-          { _id: ObjectId(id1) },
-          { $set: { default: updatedRebate } },
-          () => {
-            console.log("now here");
-            resolve();
-          }
+          { user: ObjectId(userID), "listAcc.Number": { $eq: data.Number } },
+          { $pull: { listAcc: { Number: data.Number } } }
         );
+      resolve({ deleteStatus: true });
     });
   },
-  dropList: () => {
+  dropList: (userID) => {
     return new Promise(async (resolve, reject) => {
-      await db.get().collection("list").drop();
+      await db
+        .get()
+        .collection("list")
+        .deleteOne({ user: ObjectId(userID) });
+      resolve();
     });
   },
-  genarateList: () => {
+  genarateList: (userID) => {
     return new Promise(async (resolve, reject) => {
-      let genaratedNumbers = await db
+      let list = await db
         .get()
         .collection(collection.LIST)
-        .find({}, { projection: { Number: 1, default: 1, _id: 0 } })
+        .findOne(
+          { user: ObjectId(userID) },
+          { projection: { listAcc: { Number: 1, Rebate: 1 }, _id: 0 } }
+        );
+      let credentials = await db
+        .get()
+        .collection(collection.USER)
+        .aggregate([
+          {
+            $match: { _id: ObjectId(userID) },
+          },
+          {
+            $project: {
+              _id: 0,
+              UserInfo: {
+                DOP_ID: 1,
+                DOP_password: 1,
+              },
+            },
+          },
+        ])
         .toArray();
-      console.log(genaratedNumbers);
-      let result = genaratedNumbers.map((a) => a.Number);
-      let rebateNumber = genaratedNumbers.map((a) => a.default);
-      const childPyhton = spawn("python", [
+      let decryptedPassword = cryptr.decrypt(
+        credentials[0].UserInfo.DOP_password
+      );
+      let accNumbers = list.listAcc.map((a) => a.Number);
+      let rebateNumber = list.listAcc.map((a) => a.Rebate);
+      const childPython = spawnSync("python", [
         path.join(__dirname, "../public/pythonscripts/webscrape.py"),
-        credentials.USERNAME,
-        credentials.PASSWORD,
-        result,
+        credentials[0].UserInfo.DOP_ID,
+        decryptedPassword,
+        accNumbers,
         rebateNumber,
       ]);
-
-      childPyhton.stdout.on("data", (data) => {
-        console.log(`stdout: ${data}`);
-      });
-      childPyhton.stderr.on("data", (data) => {
-        console.log(`stderr: ${data}`);
-      });
-      resolve();
+      if (childPython.status != 0) {
+        console.log(childPython.stderr);
+      } else {
+        console.log(`${childPython.stdout}`);
+        resolve(`${childPython.stdout}`);
+      }
+    });
+  },
+  changeAccountPassword: (passwords, userId) => {
+    console.log(passwords);
+    return new Promise(async (resolve, reject) => {
+      // oldpassword = await bcrypt.hash(passwords.Cpass, 10);
+      oldpassword = passwords.Cpass;
+      newPassword = await bcrypt.hash(passwords.Npass, 10);
+      let user = await db
+        .get()
+        .collection(collection.USER)
+        .findOne({ _id: ObjectId(userId) });
+      console.log(user.password);
+      console.log(oldpassword);
+      if (user) {
+        bcrypt.compare(oldpassword, user.password).then(async (status) => {
+          if (status) {
+            console.log("true");
+            await db
+              .get()
+              .collection(collection.USER)
+              .updateOne(
+                { _id: ObjectId(userId) },
+                { $set: { password: newPassword } }
+              );
+            resolve({ changeStatus: true });
+          } else {
+            console.log("false");
+            resolve({ changeStatus: false });
+          }
+        });
+      }
+    });
+  },
+  changeDOPPassword: (passwords, userId) => {
+    console.log(passwords);
+    return new Promise(async (resolve, reject) => {
+      // oldpassword = await bcrypt.hash(passwords.Cpass, 10);
+      oldpassword = passwords.Cpass;
+      newPassword = await bcrypt.hash(passwords.Npass, 10);
+      let user = await db
+        .get()
+        .collection(collection.USER)
+        .findOne({ _id: ObjectId(userId) });
+      console.log(user.UserInfo.DOP_password);
+      console.log(oldpassword);
+      console.log(user.UserInfo.DOP_password);
+      if (user) {
+        bcrypt
+          .compare(oldpassword, user.UserInfo.DOP_password)
+          .then(async (status) => {
+            if (status) {
+              console.log("true");
+              await db
+                .get()
+                .collection(collection.USER)
+                .updateOne(
+                  { _id: ObjectId(userId) },
+                  {
+                    $set: {
+                      "UserInfo.DOP_password": newPassword,
+                    },
+                  }
+                );
+              resolve({ changeStatus: true });
+            } else {
+              console.log("false");
+              resolve({ changeStatus: false });
+            }
+          });
+      }
     });
   },
 };

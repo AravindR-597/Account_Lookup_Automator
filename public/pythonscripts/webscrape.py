@@ -48,9 +48,9 @@ fetchAccounts = driver.find_element_by_id("CustomAgentRDAccountFG.ACCOUNT_NUMBER
 #print(sys[1])
 stringNumber = sys.argv[3]
 accNumbers=list(map(int,stringNumber.split(',')))
-print(accNumbers)
+# print(accNumbers)
 noOfAccounts = len(accNumbers)
-print(noOfAccounts)
+# print(noOfAccounts)
 for i in accNumbers:
     fetchAccounts.send_keys(i, ",")
 AccountNumbers = []
@@ -79,8 +79,8 @@ except:
 rebateString = sys.argv[4]
 rebate=list(map(int,rebateString.split(',')))
 
-print(len(rebate))
-print(rebate)
+# print(len(rebate))
+# print(rebate)
 p = 0
 for m, n in zip(accNumbers, rebate):
     q = str(p)
@@ -146,7 +146,7 @@ except:
 
 cNumber.send_keys(genNumber)
 
-status = Select(driver.find_element_by_id("CustomAgentRDAccountFG.INSTALLMENT_STATUS"));
+status = Select(driver.find_element_by_id("CustomAgentRDAccountFG.INSTALLMENT_STATUS"))
 
 status.select_by_value("SUC")
 
@@ -156,7 +156,7 @@ search.click()
 
 time.sleep(4)
 
-status = Select(driver.find_element_by_id("CustomAgentRDAccountFG.OUTFORMAT"));
+status = Select(driver.find_element_by_id("CustomAgentRDAccountFG.OUTFORMAT"))
 
 status.select_by_value("4")
 
