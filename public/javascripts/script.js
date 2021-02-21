@@ -1,4 +1,4 @@
-function addToList(number, name, denomination, rebate) {
+function addToList(number, name, denomination, rebate,cardNumber) {
   $.ajax({
     url: "/addToList/",
     data: {
@@ -6,6 +6,7 @@ function addToList(number, name, denomination, rebate) {
       Name: name,
       Denomination: denomination,
       Rebate: rebate,
+      CNumber:cardNumber,
     },
     method: "post",
     success: (response) => {
@@ -71,7 +72,7 @@ function genarateList() {
     success: (data) => {
       if (data) {
         alertify.alert(`List Number is : ${data}`, function () {
-          location.replace("/finish");
+          window.location.href="/final";
         });
       }
     },

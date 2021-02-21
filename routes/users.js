@@ -34,10 +34,18 @@ router.post("/login", async (req, res) => {
 router.get("/", verifyLogin, (req, res, _next) => {
   let user = req.session.user;
   if (req.query.search) {
+    // console.log(req.query.search)
     //search
-    const regex = new RegExp(searchOptions(req.query.search), "gi");
-    mainfunction.findAccount(user._id, regex).then((accounts) => {
-      res.render("index", { accounts: accounts, user });
+    // const regex = new RegExp(searchOptions(req.query.search), "gi");
+    // const search = 
+    mainfunction.findAccount(user._id, req.query.search).then((accounts) => {
+      console.log(accounts.mAccount,"--------------------------------")  
+    // mainfunction.findAccount(user._id, regex).then((accounts) => {
+      let status =""
+      if(accounts.status =="notFound"){
+         status = "No Result Found !!"
+      }
+      res.render("index", { accounts: accounts.mAccount, user ,status:status });
     });
   } else {
     mainfunction.findAccount(user._id).then((accounts) => {
@@ -46,9 +54,9 @@ router.get("/", verifyLogin, (req, res, _next) => {
   }
 });
 //function for search
-function searchOptions(text) {
-  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-}
+// function searchOptions(text) {
+//   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+// }
 
 /* GET ADD page. */
 router.get("/add", verifyLogin, (req, res) => {
@@ -122,6 +130,7 @@ router.get("/final", verifyLogin, async (req, res) => {
   if (accounts.length > 0) {
     total = await mainfunction.getTotal(user._id);
   }
+  console.log(accounts)
   res.render("final", {
     title: "Account Lookup",
     accounts: accounts,
@@ -133,6 +142,7 @@ router.get("/final", verifyLogin, async (req, res) => {
 //Add To List
 router.post("/addToList/", verifyLogin, (req, res) => {
   let user = req.session.user;
+  console.log("-------------------------",req.body)
   mainfunction.addToList(req.body, user._id).then((response) => {
     res.json(response);
   });

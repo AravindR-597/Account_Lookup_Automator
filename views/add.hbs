@@ -5,23 +5,29 @@
                 <br>
                 <legend>Add Account Details</legend>
 
+                                <div class="form-group">
+                    <label for="Denomination">Refernce Number</label>
+                    <input type="text" class="form-control" name="Ref_Number" id="Ref_Number"
+                        >
+                        <br>
                 <div class="form-group">
                     <label for="Name">Name</label>
-                    <input type="text" class="form-control" name="Name" id="Name" placeholder="Name of Account Holder">
+                    <input type="text" class="form-control" name="Name" id="Name">
                 </div>
 
                 <div class="form-group">
                     <label for="Number">Account Number</label>
-                    <input type="number" class="form-control" name="Number" id="Number" placeholder="Account Number">
+                    <input type="number" class="form-control" name="Number" id="Number" >
                 </div>
-
+                <div class="form-group">
+                    <label for="CNumber">Card Number</label>
+                    <input type="text" class="form-control" name="CNumber" id="CNumber"
+                        >
+                </div>
                 <div class="form-group">
                     <label for="Denomination">Amount</label>
                     <input type="number" class="form-control" name="Denomination" id="Denomination"
-                        placeholder="Amount">
-                </div>
-                <div class="form-group">
-                    <input type="number" class="form-control" name="default" id="default" hidden value=1>
+                        >
                 </div>
                 <button type="submit" class="btn btn-primary">Add Account</button>
                 <a href="/" class="btn btn-primary">Cancel</a>

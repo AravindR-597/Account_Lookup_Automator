@@ -10,17 +10,43 @@
                     <h4 class="text-right text-success" style="font-weight:normal">Total Records : {{this.count}}</h4>
                 </div>
                 <br>
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Card Number</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="cnumber">
+ 
+        {{#each accounts}}
+       {{this.CNumber}}
+       <br>
+        {{/each}}
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button style=" background-color:#00BBF0;color:white" id="copyText" class="btn" data-clipboard-action="copy" data-clipboard-target="#cnumber">Copy</button>
+      </div>
+    </div>
+  </div>
+</div>
                 <table class="table animated flipInX">
                     <thead class="thead-dark">
                         <tr>
 
                             <th style="text-align: center;" scope="col">Name</th>
                             <th style="text-align: center;" scope="col">Account Number</th>
+                            <th style="text-align: center;" scope="col">CNumber</th>
                             <th style="text-align: center;" scope="col">Amount</th>
                             <th style="text-align: center;" scope="col"></th>
                             <th style="text-align: center;" scope="col">R/A</th>
                             <th style="text-align: center;" scope="col"></th>
                             <th style="text-align: center;" scope="col">Remove from list</th>
+                            
                             <th></th>
 
                             <th></th>
@@ -31,6 +57,7 @@
                         <tr>
                             <td style="text-align: center;">{{this.Name}}</td>
                             <td style="text-align: center;" class="{{this.Number}}">{{this.Number}}</td>
+                            <td style="text-align: center;">{{this.CNumber}}</td>
                             <td style="text-align: center;">{{this.Denomination}}</td>
                             <td colspan="1" class="text-right ">
                                 <button onclick="rebateFunction('{{this.Number}}',1)" id="plusbtn"
@@ -43,6 +70,8 @@
                             <td style="text-align: center;">
                                 <button onclick="deleteFromList('{{this.Number}}')"
                                     class="btn btn-danger">Delete</button></td>
+
+ 
                         </tr>
                         {{/each}}
 
@@ -59,15 +88,16 @@
                     <div id="list" class="text-center">
                         <h5 onchange="genList(event)">
                             {{#each accounts}}
-                            {{this.Number}},
+                            {{this.Number}}
                             {{/each}}
                         </h5>
                     </div>
                 </div>
                 <div class="text-center">
-                    <button style=" background-color:#00BBF0;color:white" id="copyText" onclick="genList('list')"
-                        class="btn" data-clipboard-action="copy" data-clipboard-target="#list">Copy to
-                        Clipboard</button>
+<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#staticBackdrop">
+  Copy Number
+</button>
+
                     <button onclick="genarateList()" class="btn btn-success" id="genarateBtn">Generate List</button>
                     <a href="/finish" style=" background-color:#45EBA5;color:white" class="btn ">Finish</a>
                 </div>

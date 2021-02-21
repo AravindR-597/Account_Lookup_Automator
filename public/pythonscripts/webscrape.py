@@ -47,7 +47,7 @@ cash.click()
 fetchAccounts = driver.find_element_by_id("CustomAgentRDAccountFG.ACCOUNT_NUMBER_FOR_SEARCH")
 #print(sys[1])
 stringNumber = sys.argv[3]
-accNumbers=list(map(int,stringNumber.split(',')))
+accNumbers=list(map(str,stringNumber.split(',')))
 # print(accNumbers)
 noOfAccounts = len(accNumbers)
 # print(noOfAccounts)
@@ -86,7 +86,7 @@ for m, n in zip(accNumbers, rebate):
     q = str(p)
     if n != 1:
 
-        if p == 10:
+        if p >= 10:
             rebateNextPage = driver.find_element_by_id("Action.SelectedAgentRDActSummaryListing.GOTO_NEXT__")
             rebateNextPage.click()
 

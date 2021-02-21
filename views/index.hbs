@@ -20,7 +20,9 @@
 
 <section>
   <div class="container mt-4">
+          {{#if accounts}}
     <div class="row">
+
       {{#each accounts}}
       <div class="col-md-3 p-3">
         <div class="card" style="width: 17rem;height:13rem;border-color:#45EBA5">
@@ -29,19 +31,26 @@
             <h3 style="color:red;" class="card-subtitle mb-2">{{this.Number}}</h3>
             <p class="card-text"> ₹ {{this.Denomination}}</p>
 
-            <button onclick="addToList('{{this.Number}}','{{this.Name}}','{{this.Denomination}}','{{this.default}}')" class="btn btn-primary" id="addToList" role="button">Add To list</button>
+            <button onclick="addToList('{{this.Number}}','{{this.Name}}','{{this.Denomination}}','{{this.default}}','{{this.CNumber}}')" class="btn btn-primary" id="addToList" role="button">Add To list</button>
 
           </div>
         </div>
       </div>
       {{/each}}
     </div>
+    {{else}}
+    <h2 class="text-center">{{status}}</h2>
+      {{/if}}
   </div>
 </section>
-
 <style>
 .card-body > h5,h3{
 font-weight: normal;
   }
-
+.card{
+  transition: all .2s ease-in-out;
+}
+.card:hover {
+ transform: scale(1.1); 
+ }
 </style>
